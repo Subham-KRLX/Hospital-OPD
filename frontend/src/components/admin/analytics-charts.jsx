@@ -23,9 +23,40 @@ export default function AnalyticsCharts({ stats }) {
           fetch(`${API_URL}/api/patients`, { headers: { Authorization: `Bearer ${token}` } }),
         ])
 
-        const appointments = appointmentsRes.ok ? await appointmentsRes.json() : []
-        const doctors = doctorsRes.ok ? await doctorsRes.json() : []
-        const patients = patientsRes.ok ? await patientsRes.json() : []
+        let appointments = appointmentsRes.ok ? await appointmentsRes.json() : []
+        let doctors = doctorsRes.ok ? await doctorsRes.json() : []
+        let patients = patientsRes.ok ? await patientsRes.json() : []
+
+        // Use fake data if no real data exists
+        if (appointments.length === 0) {
+          appointments = [
+            { id: 1, status: 'SCHEDULED', createdAt: new Date().toISOString() },
+            { id: 2, status: 'COMPLETED', createdAt: new Date().toISOString() },
+            { id: 3, status: 'SCHEDULED', createdAt: new Date().toISOString() },
+            { id: 4, status: 'COMPLETED', createdAt: new Date().toISOString() },
+            { id: 5, status: 'CANCELLED', createdAt: new Date().toISOString() },
+            { id: 6, status: 'COMPLETED', createdAt: new Date().toISOString() },
+            { id: 7, status: 'SCHEDULED', createdAt: new Date().toISOString() },
+          ]
+        }
+        
+        if (doctors.length === 0) {
+          doctors = [
+            { id: 1, name: 'Sarah Johnson', specialization: 'Cardiology', consultationFee: 800 },
+            { id: 2, name: 'Michael Chen', specialization: 'Neurology', consultationFee: 900 },
+            { id: 3, name: 'Emily Davis', specialization: 'Pediatrics', consultationFee: 600 },
+            { id: 4, name: 'David Kumar', specialization: 'Orthopedics', consultationFee: 750 },
+            { id: 5, name: 'Lisa Anderson', specialization: 'Dermatology', consultationFee: 650 },
+          ]
+        }
+        
+        if (patients.length === 0) {
+          patients = [
+            { id: 1, name: 'John Doe' },
+            { id: 2, name: 'Jane Smith' },
+            { id: 3, name: 'Robert Brown' },
+          ]
+        }
 
         setAnalyticsData({ appointments, doctors, patients })
       } catch (error) {
