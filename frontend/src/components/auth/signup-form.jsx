@@ -41,6 +41,7 @@ export default function SignupForm() {
 
       if (!response.ok) {
         setError(data.error || "Signup failed")
+        setLoading(false)
         return
       }
 
@@ -48,11 +49,13 @@ export default function SignupForm() {
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
 
-      // Use window.location for full page reload to ensure auth state is updated
-      window.location.href = "/dashboard"
+      // Small delay to ensure localStorage is written, then redirect
+      setTimeout(() => {
+        window.location.href = "/dashboard"
+      }, 100)
     } catch (err) {
+      console.error("Signup error:", err)
       setError("An error occurred during signup")
-    } finally {
       setLoading(false)
     }
   }

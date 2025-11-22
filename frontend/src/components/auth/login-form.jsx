@@ -28,6 +28,7 @@ export default function LoginForm() {
 
       if (!response.ok) {
         setError(data.error || "Login failed")
+        setLoading(false)
         return
       }
 
@@ -35,11 +36,13 @@ export default function LoginForm() {
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
 
-      // Use window.location for full page reload to ensure auth state is updated
-      window.location.href = "/dashboard"
+      // Small delay to ensure localStorage is written, then redirect
+      setTimeout(() => {
+        window.location.href = "/dashboard"
+      }, 100)
     } catch (err) {
+      console.error("Login error:", err)
       setError("An error occurred during login")
-    } finally {
       setLoading(false)
     }
   }
