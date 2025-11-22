@@ -7,7 +7,7 @@ import PatientQueueCard from "./patient-queue-card"
 import SlotManagement from "./slot-management"
 
 export default function DoctorDashboard() {
-  const { user, getToken } = useAuth()
+  const { user, getToken, logout } = useAuth()
   const [doctor, setDoctor] = useState(null)
   const [appointments, setAppointments] = useState([])
   const [loading, setLoading] = useState(true)
@@ -63,9 +63,17 @@ export default function DoctorDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome, Dr. {doctor?.name}</h1>
-          <p className="text-gray-600">{doctor?.specialization}</p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome, Dr. {doctor?.name}</h1>
+            <p className="text-gray-600">{doctor?.specialization}</p>
+          </div>
+          <button
+            onClick={logout}
+            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md"
+          >
+            Logout
+          </button>
         </div>
 
         {/* Quick Stats */}

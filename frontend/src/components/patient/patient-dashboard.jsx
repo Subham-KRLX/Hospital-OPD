@@ -8,7 +8,7 @@ import MedicalHistoryCard from "./medical-history-card"
 import QuickBooking from "./quick-booking"
 
 export default function PatientDashboard() {
-  const { user, getToken } = useAuth()
+  const { user, getToken, logout } = useAuth()
   const [appointments, setAppointments] = useState([])
   const [patient, setPatient] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -52,9 +52,17 @@ export default function PatientDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome back, {patient?.name}</h1>
-          <p className="text-gray-600">Here's your health overview</p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome back, {patient?.name}</h1>
+            <p className="text-gray-600">Here's your health overview</p>
+          </div>
+          <button
+            onClick={logout}
+            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold transition shadow-md"
+          >
+            Logout
+          </button>
         </div>
 
         {/* Quick Stats */}
