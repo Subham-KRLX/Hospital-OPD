@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useAuth } from "../auth/use-auth"
 import API_URL from "../../config/api"
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 export default function AnalyticsCharts({ stats }) {
   const { getToken } = useAuth()
@@ -88,22 +89,42 @@ export default function AnalyticsCharts({ stats }) {
 
   // Generate monthly appointment data for chart
   const monthlyData = [
-    { month: 'Jan', appointments: 45 },
-    { month: 'Feb', appointments: 52 },
-    { month: 'Mar', appointments: 48 },
-    { month: 'Apr', appointments: 61 },
-    { month: 'May', appointments: 55 },
-    { month: 'Jun', appointments: 67 },
+    { month: 'Jan', appointments: 45, revenue: 22500 },
+    { month: 'Feb', appointments: 52, revenue: 26000 },
+    { month: 'Mar', appointments: 48, revenue: 24000 },
+    { month: 'Apr', appointments: 61, revenue: 30500 },
+    { month: 'May', appointments: 55, revenue: 27500 },
+    { month: 'Jun', appointments: 67, revenue: 33500 },
   ]
 
-  // Generate department data
+  // Generate department data for pie chart
   const departmentData = [
-    { name: 'Cardiology', value: 25 },
-    { name: 'Neurology', value: 20 },
-    { name: 'Pediatrics', value: 18 },
-    { name: 'Orthopedics', value: 22 },
-    { name: 'Dermatology', value: 15 },
+    { name: 'Cardiology', value: 25, color: '#3b82f6' },
+    { name: 'Neurology', value: 20, color: '#8b5cf6' },
+    { name: 'Pediatrics', value: 18, color: '#ec4899' },
+    { name: 'Orthopedics', value: 22, color: '#10b981' },
+    { name: 'Dermatology', value: 15, color: '#f59e0b' },
   ]
+
+  // Appointment status data for pie chart
+  const appointmentStatusData = [
+    { name: 'Scheduled', value: statusGroups.scheduled || 3, color: '#3b82f6' },
+    { name: 'Completed', value: statusGroups.completed || 3, color: '#10b981' },
+    { name: 'Cancelled', value: statusGroups.cancelled || 1, color: '#ef4444' },
+  ]
+
+  // Weekly trend data
+  const weeklyData = [
+    { day: 'Mon', patients: 12 },
+    { day: 'Tue', patients: 19 },
+    { day: 'Wed', patients: 15 },
+    { day: 'Thu', patients: 22 },
+    { day: 'Fri', patients: 18 },
+    { day: 'Sat', patients: 25 },
+    { day: 'Sun', patients: 10 },
+  ]
+
+  const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b']
 
   return (
     <div>
@@ -172,50 +193,113 @@ export default function AnalyticsCharts({ stats }) {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        {/* Monthly Appointments Trend */}
+        {/* Monthly Appointments Trend - Line Chart */}
         <div className="backdrop-blur-xl bg-white/80 border border-white/20 rounded-2xl p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Monthly Appointments</h3>
-          <div className="space-y-2">
-            {monthlyData.map((data) => (
-              <div key={data.month}>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm text-gray-600">{data.month}</span>
-                  <span className="text-sm font-bold text-purple-600">{data.appointments}</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${(data.appointments / 70) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <h3 className="text-lg font-bold text-gray-800 mb-4">📈 Monthly Appointments Trend</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={monthlyData}>
+              <defs>
+                <linearGradient id="colorAppointments" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="month" stroke="#6b7280" />
+              <YAxis stroke="#6b7280" />
+              <Tooltip 
+                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+              />
+              <Area type="monotone" dataKey="appointments" stroke="#8b5cf6" fillOpacity={1} fill="url(#colorAppointments)" />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
 
-        {/* Department Distribution */}
+        {/* Appointment Status - Pie Chart */}
         <div className="backdrop-blur-xl bg-white/80 border border-white/20 rounded-2xl p-6">
-          <h3 className="text-lg font-bold text-gray-800 mb-4">Department-wise Distribution</h3>
-          <div className="space-y-2">
-            {departmentData.map((dept, idx) => {
-              const colors = ['bg-blue-500', 'bg-purple-500', 'bg-pink-500', 'bg-green-500', 'bg-amber-500']
-              return (
-                <div key={dept.name}>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm text-gray-600">{dept.name}</span>
-                    <span className="text-sm font-bold text-gray-800">{dept.value}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className={`${colors[idx % colors.length]} h-2 rounded-full transition-all duration-500`}
-                      style={{ width: `${dept.value}%` }}
-                    ></div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+          <h3 className="text-lg font-bold text-gray-800 mb-4">📊 Appointment Status Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={appointmentStatusData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {appointmentStatusData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
         </div>
+      </div>
+
+      {/* Second Row of Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Department Distribution - Pie Chart */}
+        <div className="backdrop-blur-xl bg-white/80 border border-white/20 rounded-2xl p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">🏥 Department-wise Distribution</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={departmentData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {departmentData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Weekly Patient Trend - Bar Chart */}
+        <div className="backdrop-blur-xl bg-white/80 border border-white/20 rounded-2xl p-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">📅 Weekly Patient Trend</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="day" stroke="#6b7280" />
+              <YAxis stroke="#6b7280" />
+              <Tooltip 
+                contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+              />
+              <Bar dataKey="patients" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      {/* Revenue Trend */}
+      <div className="backdrop-blur-xl bg-white/80 border border-white/20 rounded-2xl p-6 mb-6">
+        <h3 className="text-lg font-bold text-gray-800 mb-4">💰 Revenue Trend (Last 6 Months)</h3>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={monthlyData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+            <XAxis dataKey="month" stroke="#6b7280" />
+            <YAxis stroke="#6b7280" />
+            <Tooltip 
+              contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+            />
+            <Legend />
+            <Line type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', r: 6 }} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Doctor List */}
