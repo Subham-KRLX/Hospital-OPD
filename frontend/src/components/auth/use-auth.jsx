@@ -13,6 +13,7 @@ export function useAuth() {
       const storedUser = localStorage.getItem("user")
       
       if (!token || !storedUser) {
+        setUser(null)
         setLoading(false)
         return
       }
@@ -36,9 +37,9 @@ export function useAuth() {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
         setUser(null)
-      } finally {
-        setLoading(false)
       }
+      
+      setLoading(false)
     }
 
     validateAuth()
@@ -48,6 +49,7 @@ export function useAuth() {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
     setUser(null)
+    window.location.href = "/"
   }, [])
 
   const getToken = useCallback(() => {
