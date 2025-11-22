@@ -82,13 +82,13 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">🏥 Admin Control Panel</h1>
-            <p className="text-gray-600">Manage Users, Analytics, Billing & System Settings</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">🛡️ ADMINISTRATOR PANEL</h1>
+            <p className="text-gray-700 font-semibold">System Management • User Control • Analytics • Billing</p>
           </div>
           <button
             onClick={logout}
@@ -162,11 +162,14 @@ export default function AdminDashboard() {
               onClick={() => setActiveTab(tab)}
               className={`px-6 py-3 rounded-lg font-semibold transition capitalize whitespace-nowrap ${
                 activeTab === tab
-                  ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
-                  : "bg-white/60 text-gray-700 hover:bg-white"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
+                  : "bg-white/80 text-gray-700 hover:bg-white border-2 border-purple-200"
               }`}
             >
-              {tab}
+              {tab === "overview" ? "📊 Overview" :
+               tab === "users" ? "👥 Users" :
+               tab === "analytics" ? "📈 Analytics" :
+               "💰 Billing"}
             </button>
           ))}
         </div>
