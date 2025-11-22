@@ -14,7 +14,7 @@ import slotRoutes from "./routes/slots.js"
 import notificationRoutes from "./routes/notifications.js"
 
 // Services
-import { startReminderScheduler } from "./lib/reminder-service.js"
+// import { startReminderScheduler } from "./lib/reminder-service.js"
 
 dotenv.config()
 
@@ -70,7 +70,8 @@ const PORT = process.env.PORT || 3001
 if (process.env.VERCEL !== "1") {
   server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
-    startReminderScheduler() // Reminder scheduler start karo
+    // Reminder scheduler only for local development
+    // startReminderScheduler()
   })
 }
 

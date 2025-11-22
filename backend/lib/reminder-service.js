@@ -1,6 +1,5 @@
 // Reminder service - appointments ke liye notifications
 import prisma from "./db.js"
-import { sendPushNotification } from "./push-notifications.js"
 
 // Kal wale appointments check karo aur reminder bhejo
 export const checkUpcomingAppointments = async () => {
