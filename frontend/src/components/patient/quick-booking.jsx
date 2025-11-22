@@ -110,27 +110,33 @@ export default function QuickBooking({ patientId }) {
             <option value="">Choose a doctor...</option>
             {doctors.map((doctor) => (
               <option key={doctor.id} value={doctor.id}>
-                Dr. {doctor.name} - {doctor.specialization}
+                Dr. {doctor.name} - {doctor.specialization || 'General'}
               </option>
             ))}
           </select>
         </div>
 
-        {slots.length > 0 && (
+        {selectedDoctor && (
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">Select Time Slot</label>
-            <select
-              value={selectedSlot || ""}
-              onChange={(e) => setSelectedSlot(Number.parseInt(e.target.value))}
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500 text-sm"
-            >
-              <option value="">Choose a time...</option>
-              {slots.map((slot) => (
-                <option key={slot.id} value={slot.id}>
-                  {new Date(slot.date).toLocaleDateString()} - {slot.startTime}
-                </option>
-              ))}
-            </select>
+            {slots.length > 0 ? (
+              <select
+                value={selectedSlot || ""}
+                onChange={(e) => setSelectedSlot(Number.parseInt(e.target.value))}
+                className="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500 text-sm"
+              >
+                <option value="">Choose a time...</option>
+                {slots.map((slot) => (
+                  <option key={slot.id} value={slot.id}>
+                    {new Date(slot.date).toLocaleDateString()} - {slot.startTime}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div className="px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+                No available slots for this doctor. Please select another doctor or contact the hospital.
+              </div>
+            )}
           </div>
         )}
 
