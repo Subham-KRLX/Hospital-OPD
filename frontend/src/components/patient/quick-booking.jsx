@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useAuth } from "../auth/use-auth"
+import API_URL from "../../config/api"
 
 export default function QuickBooking({ patientId }) {
   const { getToken } = useAuth()
@@ -16,7 +17,7 @@ export default function QuickBooking({ patientId }) {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/doctors")
+        const response = await fetch(`${API_URL}/api/doctors`)
         const data = await response.json()
         setDoctors(data)
       } catch (error) {
@@ -32,7 +33,7 @@ export default function QuickBooking({ patientId }) {
     setSelectedSlot(null)
 
     try {
-      const response = await fetch(`http://localhost:3001/api/slots/doctor/${doctorId}`)
+      const response = await fetch(`${API_URL}/api/slots/doctor/${doctorId}`)
       const data = await response.json()
       setSlots(data)
     } catch (error) {
@@ -49,7 +50,7 @@ export default function QuickBooking({ patientId }) {
     setLoading(true)
     try {
       const token = getToken()
-      const response = await fetch("http://localhost:3001/api/appointments", {
+      const response = await fetch(`${API_URL}/api/appointments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

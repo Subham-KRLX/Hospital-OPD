@@ -122,4 +122,40 @@ router.post("/password-reset", async (req, res) => {
   }
 })
 
+// Admin routes
+router.get("/users", authMiddleware, async (req, res) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    })
+    res.json(users)
+  } catch (error) {
+    console.error("Error fetching users:", error)
+    res.status(500).json({ error: "Failed to fetch users" })
+  }
+})
+
+router.delete("/users/:id", authMiddleware, async (req, res) => {
+  try {
+    const userId = Number.parseInt(req.params.id)
+    
+    // Delete associated patient or doctor profile first
+    await prisma.patient.deleteMany({ where: { userId } })
+    await prisma.doctor.deleteMany({ where: { userId } })
+    
+    // Delete user
+    await prisma.user.delete({ where: { id: userId } })
+    
+    res.json({ message: "User deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting user:", error)
+    res.status(500).json({ error: "Failed to delete user" })
+  }
+})
+
 export default router
