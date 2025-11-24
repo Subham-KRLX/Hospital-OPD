@@ -314,6 +314,8 @@ cd frontend && npm run dev
 ✨ Native app-like experience
  ⁠
 
+**New:** The PWA dashboard now ships with a Notification Health Monitor (`frontend/src/components/pwa/push-diagnostics.jsx`) so developers and power users can inspect browser support, verify service workers, re-subscribe devices, and dispatch custom test payloads without leaving the app.
+
 ---
 
 ## 🎯 12-Week Development Roadmap

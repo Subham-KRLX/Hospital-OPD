@@ -8,6 +8,7 @@ import {
   unsubscribeFromPushNotifications,
   sendTestNotification,
 } from "../../lib/push-notifications"
+import PushDiagnosticsPanel from "./push-diagnostics"
 
 export default function NotificationSettings() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
@@ -61,7 +62,8 @@ export default function NotificationSettings() {
   }
 
   return (
-    <div className="backdrop-blur-xl bg-white/80 border border-white/20 rounded-2xl p-6">
+    <>
+      <div className="backdrop-blur-xl bg-white/80 border border-white/20 rounded-2xl p-6">
       <h3 className="text-lg font-bold text-gray-800 mb-4">Push Notifications</h3>
 
       {message && (
@@ -117,6 +119,8 @@ export default function NotificationSettings() {
           <p className="text-sm text-green-700 font-semibold">✓ Notifications Active</p>
         </div>
       )}
-    </div>
+      </div>
+      <PushDiagnosticsPanel />
+    </>
   )
 }
